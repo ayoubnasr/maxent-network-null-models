@@ -6,9 +6,6 @@ import numpy as np
 
 # Define an array of constraints for all the 34 nodes: k[i] = G.degree[i] 
 
-
-
-
 def link_probabilities(lam):
     """Update the link probabilities P_ij to match the given multipliers.
     """
@@ -33,42 +30,3 @@ def fit(k, eta=0.15, tol=1e-8, max_iter = 100000):
 def sample(P, rndg):
     A = np.triu(rndg.random(P.shape) < P, k=1)
     return (A | A.T).astype(int)
-
-
-def main():
-    G = nx.karate_club_graph()
-
-    # Define the constraint vector:
-    k = np.array([G.degree[i] for i in G.nodes])
-
-    # initialize multipliers:
-    lam, P = fit(k)
-
-    # How far the nodes' expected degrees are from the constraints we set:
-    print("Fit max degree error = ", np.max(np.abs(P.sum(axis=1) - k)))
-
-    rndg = np.random.default_rng(42)
-    A = sample(P, rndg)
-    print("\nCompare expected total number of edges to the total number of edges in our sample:")
-    print("Expected edges:", P.sum() // 2, "Edges in one sample:", A.sum() // 2, "\n")
-    
-    n = 100000
-
-    sample_deg = np.zeros(len(k))
-
-    for i in range(n):
-        A = sample(P, rndg)
-        sample_deg += A.sum(axis=1)
-    
-    print("Avg degrees:", sample_deg / n)
-    print("Max error:", np.max(np.abs(sample_deg / n - k)))
-
-
-
-
-
-
-    
-
-if __name__ == "__main__":
-    main()
