@@ -49,8 +49,9 @@ def main():
 
     rndg = np.random.default_rng(42)
     A = sample(P, rndg)
-    print("edges in one sample:", A.sum() // 2)
-
+    print("\nCompare expected total number of edges to the total number of edges in our sample:")
+    print("Expected edges:", P.sum() // 2, "Edges in one sample:", A.sum() // 2, "\n")
+    
     n = 100000
 
     sample_deg = np.zeros(len(k))
